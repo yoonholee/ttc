@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>TTC Matrix</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="translations">
+        <button class="translation-btn active" data-translation="gia">Gia-Fu Feng</button>
+        <button class="translation-btn" data-translation="hinton">David Hinton</button>
+        <button class="translation-btn" data-translation="john_wu">John C. H. Wu</button>
+        <button class="translation-btn" data-translation="lau">D. C. Lau</button>
+        <button class="translation-btn" data-translation="red_pine">Red Pine</button>
+        <button class="translation-btn" data-translation="yi_wu">Yi Wu</button>
+    </div>
+    <div id="main">
+        <div>
+            <div id="grid"></div>
+            <button id="random" title="Random Verse (Space)">
+                <img src="yin-and-yang.png" alt="Random" style="width:48px;height:48px;display:block;margin:auto;" />
+            </button>
+        </div>
+        <div id="viewer"><em>Select a verse.</em></div>
+    </div>
+    <script src="gia.js"></script>
+    <script src="hinton.js"></script>
+    <script src="john_wu.js"></script>
+    <script src="lau.js"></script>
+    <script src="red_pine.js"></script>
+    <script src="yi_wu.js"></script>
+    <script>
+        const translations = {
+            gia: gia_verses,
+            hinton: hinton_verses,
+            john_wu: john_wu_verses,
+            lau: lau_verses,
+            red_pine: red_pine_verses,
+            'stephen-mitchell': window['stephen-mitchell_verses'],
+            yi_wu: yi_wu_verses
+        };
+        
+        let currentTranslation = 'gia';
+        let verses = translations[currentTranslation];
+        const grid = document.getElementById('grid');
+        const viewer = document.getElementById('viewer');
+        let selectedIdx = null;
+        
+        function setSelected(idx) {
+            document.querySelectorAll('.cell').forEach((c, i) => {
+                c.classList.toggle('selected', i === idx);
+            });
+            selectedIdx = idx;
+        }
+        
+        function showVerse(idx) {
+            viewer.innerHTML = '<div>' + (verses[idx] ? verses[idx].replace(/\n/g, '<br>') : '') + '</div>';
+        }
+        
+        function switchTranslation(translationName) {
+            currentTranslation = translationName;
+            verses = translations[currentTranslation];
+            
+            // Update button states
+            document.querySelectorAll('.translation-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.translation === translationName);
+            });
+            
+            // If a passage was selected, show the same passage number in the new translation
+            if (selectedIdx !== null && selectedIdx < verses.length) {
+                showVerse(selectedIdx);
+            } else {
+                // Clear selection and viewer if the selected index is out of range
+                setSelected(null);
+                viewer.innerHTML = '<em>Select a verse.</em>';
+            }
+        }
+        
+        function createGrid() {
+            grid.innerHTML = '';
+            verses.forEach((text, i) => {
+                const d = document.createElement('div');
+                d.className = 'cell';
+                d.textContent = i + 1;
+                d.tabIndex = 0;
+                d.onclick = () => {
+                    setSelected(i);
+                    showVerse(i);
+                };
+                d.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        d.click();
+                    }
+                };
+                grid.appendChild(d);
+            });
+        }
+        
+        // Initialize grid
+        createGrid();
+        
+        // Add event listeners for translation buttons
+        document.querySelectorAll('.translation-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                switchTranslation(btn.dataset.translation);
+            });
+        });
+        
+        document.getElementById('random').onclick = () => {
+            if (verses.length > 0) {
+                const idx = Math.floor(Math.random() * verses.length);
+                setSelected(idx);
+                showVerse(idx);
+            }
+        };
+        
+        document.addEventListener('keydown', (e) => {
+            if ((e.code === 'Space' || e.code === 'Enter') && document.activeElement.tagName !== 'INPUT') {
+                document.getElementById('random').click();
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+
+</html>

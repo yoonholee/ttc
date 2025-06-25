@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#translations {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.translation-btn {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.translation-btn:hover {
+    background: #f0f0f0;
+}
+
+.translation-btn.active {
+    background: #e0e0e0;
+    border-color: #999;
+}
+
+#main {
+    display: flex;
+    gap: 20px;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(9, 40px);
+    grid-template-rows: repeat(9, 40px);
+    gap: 2px;
+}
+
+.cell {
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: white;
+    outline: none;
+}
+
+.cell:hover {
+    background: #f0f0f0;
+}
+
+.cell.selected {
+    background: #e0e0e0;
+}
+
+#viewer {
+    flex: 1;
+    padding: 20px;
+    min-height: 300px;
+}
+
+#random {
+    margin-top: 20px;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#random:active {
+    transform: scale(0.95);
+    background-color: #f0f0f0;
+} 
